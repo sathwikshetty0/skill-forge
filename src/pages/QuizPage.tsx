@@ -17,14 +17,8 @@ interface Question {
   timer_limit: number;
 }
 
-const MOCK_QUESTIONS: Question[] = [
-  { id: '1', text: 'Which component represents the "brain" of the IVC logo?', type: 'mcq', options: ['The Gear', 'The Brain', 'The Lightbulb', 'The Hand'], correct_answer: 'The Brain', timer_limit: 60 },
-  { id: '2', text: 'Define the core principle of IVC in one word.', type: 'text', correct_answer: 'Innovation', timer_limit: 45 },
-  { id: '3', text: 'Calculate the sum of bits in a byte.', type: 'numerical', correct_answer: '8', timer_limit: 30 },
-  { id: '4', text: 'Select the futuristic elements present in the UI.', type: 'multi', options: ['Glow Effects', 'Circuit Board BG', 'Futuristic Font', 'Shadows'], correct_answer: 'Glow Effects, Circuit Board BG, Futuristic Font', timer_limit: 60 },
-];
-
 const QuizPage: React.FC = () => {
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answer, setAnswer] = useState<string | string[]>('');
   const [timeLeft, setTimeLeft] = useState(0);
@@ -34,8 +28,22 @@ const QuizPage: React.FC = () => {
   const [quizEnded, setQuizEnded] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
   const navigate = useNavigate();
-  const currentQ = MOCK_QUESTIONS[currentIdx];
+  const currentQ = questions[currentIdx];
   const timerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const { data } = await supabase
+        .from('questions')
+        .select('*')
+        .eq('is_active', true);
+      if (data) {
+        setQuestions(data);
+        setTimeLeft(data[0]?.timer_limit || 60);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
   const handleViolation = (count: number, message: string) => {
     setViolations(count);
@@ -64,8 +72,21 @@ const QuizPage: React.FC = () => {
 
   const handleSubmit = async () => {
     const points = Math.max(0, Math.floor(100 * (timeLeft / currentQ.timer_limit)));
+    
+    // Log response to Supabase
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from('responses').insert({
+        user_id: user.id,
+        question_id: currentQ.id,
+        answer: Array.isArray(answer) ? answer.join(', ') : answer,
+        points,
+        time_taken: currentQ.timer_limit - timeLeft
+      });
+    }
+
     setTotalScore(prev => prev + points);
-    if (currentIdx < MOCK_QUESTIONS.length - 1) {
+    if (currentIdx < questions.length - 1) {
       setCurrentIdx(currentIdx + 1);
       setAnswer('');
     } else {
@@ -98,10 +119,10 @@ const QuizPage: React.FC = () => {
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-8">
               <div className="w-full md:w-auto">
                 <p className="font-display text-xl tracking-[0.3em] text-[#64748b] uppercase font-black mb-6">
-                  QUESTION {currentIdx + 1} / {MOCK_QUESTIONS.length}
+                  QUESTION {currentIdx + 1} / {questions.length}
                 </p>
                 <div className="flex gap-4">
-                  {MOCK_QUESTIONS.map((_, i) => (
+                  {questions.map((_, i) => (
                     <div key={i} className={`h-2.5 grow md:w-24 rounded-full transition-all duration-700 ${i <= currentIdx ? 'bg-[#3b82f6] shadow-[0_4px_12px_rgba(59,130,246,0.3)]' : 'bg-[#e2e8f0]'}`} />
                   ))}
                 </div>
