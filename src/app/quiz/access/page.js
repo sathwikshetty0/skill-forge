@@ -48,13 +48,13 @@ export default function ProtocolAccessPage() {
     <div className="h-screen w-full bg-[#f8fafc] flex font-sans text-[#0f172a] overflow-hidden">
       <Sidebar />
       
-      <main className="flex-1 ml-0 lg:ml-[280px] min-h-screen flex items-center justify-center p-6 relative">
+      <main className="flex-1 ml-0 lg:ml-[240px] min-h-screen flex items-center justify-center p-6 relative">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(37,99,235,0.02)_0%,_transparent_50%)] pointer-events-none" />
         
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-[480px] bg-white rounded-[48px] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] border border-[#f1f5f9] p-12 md:p-14 text-center space-y-10"
+          className="w-full max-w-[380px] bg-white rounded-[48px] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] border border-[#f1f5f9] p-16 md:p-14 text-center space-y-14"
         >
           <div className="space-y-4">
             <div className="w-16 h-16 bg-blue-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
