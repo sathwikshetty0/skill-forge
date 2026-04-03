@@ -34,11 +34,20 @@
     border-color: var(--color-card-border, #E8EDF2);
   }
 
+  html {
+    background-color: var(--color-page-bg);
+    font-size: 13px; /* Achieves the 0.8 zoom effect safely across all browsers/devices */
+  }
+
   body {
     background-color: var(--color-page-bg);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
   }
 }
 

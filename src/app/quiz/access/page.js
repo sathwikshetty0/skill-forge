@@ -48,7 +48,7 @@ export default function ProtocolAccessPage() {
     <div className="h-screen w-full bg-[#f8fafc] flex font-sans text-[#0f172a] overflow-hidden">
       <Sidebar />
       
-      <main className="flex-1 ml-[280px] flex items-center justify-center p-6 relative">
+      <main className="flex-1 ml-0 lg:ml-[280px] min-h-screen flex items-center justify-center p-6 relative">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(37,99,235,0.02)_0%,_transparent_50%)] pointer-events-none" />
         
         <motion.div
@@ -85,7 +85,7 @@ export default function ProtocolAccessPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#0f172a] text-white py-6 rounded-[28px] font-black text-xs tracking-[0.4em] uppercase shadow-2xl hover:bg-primary-blue transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-4 group"
+              className="w-full bg-[#0f172a] text-white py-4 rounded-[28px] font-black text-xs tracking-[0.4em] uppercase shadow-2xl hover:bg-primary-blue transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-4 group"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
