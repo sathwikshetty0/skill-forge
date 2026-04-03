@@ -30,6 +30,7 @@ export default function ReportsPage() {
   const [showAiModal, setShowAiModal] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
 
   const supabase = createClient();
   const router = useRouter();
@@ -80,6 +81,7 @@ export default function ReportsPage() {
   ]);
 
   useEffect(() => {
+    setIsMounted(true);
     async function checkAuth() {
       const { data: { user } } = await supabase.auth.getUser();
       const cookies = document.cookie.split(';');
@@ -108,10 +110,12 @@ export default function ReportsPage() {
 
   const isAdmin = role === "admin";
 
+  if (!isMounted) return null;
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex font-sans text-black">
       <Sidebar />
-      <main className="flex-1 ml-0 lg:ml-[240px] p-6 md:p-14 space-y-10 min-h-screen flex flex-col">
+      <main className="flex-1 ml-0 lg:ml-[280px] p-6 md:p-14 space-y-10 min-h-screen flex flex-col">
         {isAdmin ? (
           <>
             <header className="space-y-1">
