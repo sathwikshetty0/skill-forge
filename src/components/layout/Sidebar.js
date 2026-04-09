@@ -60,7 +60,6 @@ export default function Sidebar() {
   };
 
   const isAdmin = role === "admin" || role === "evaluator";
-  const isParent = role === "parent";
 
   const adminItems = [
     { href: "/quiz/admin", label: "Control Center", icon: LayoutDashboard },
@@ -70,55 +69,25 @@ export default function Sidebar() {
     { href: "/quiz/admin/security", label: "Security Audit", icon: ShieldCheck },
   ];
 
-  const parentItems = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/reports", label: "Performance Reports", icon: Activity },
-  ];
-
   const candidateItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/quiz/access", label: "Protocol", icon: Zap },
     { href: "/dashboard/reports", label: "Reports", icon: Activity },
   ];
 
-  const navItems = isAdmin ? adminItems : isParent ? parentItems : candidateItems;
+  const navItems = isAdmin ? adminItems : candidateItems;
 
   return (
-    <>
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={toggleSidebar}
-        className="fixed top-6 left-6 z-[70] lg:hidden p-4 bg-white rounded-2xl shadow-2xl shadow-blue-200 text-[#0F172A] border border-[#f1f5f9] active:scale-95 transition-all"
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
-      {/* Backdrop for mobile */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={toggleSidebar}
-            className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-md z-[60] lg:hidden"
-          />
-        )}
-      </AnimatePresence>
-
-      <motion.aside 
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
-        initial={false}
-        animate={{ 
-          width: isExpanded ? 240 : 72,
-          translateX: (isOpen || !isExpanded) ? 0 : 0 
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 35 }}
-        className={`fixed left-0 top-0 bottom-0 bg-white border-r border-[#F1F5F9] flex flex-col z-[65] lg:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } overflow-hidden`}
-      >
+    <motion.aside 
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+      initial={false}
+      animate={{ 
+        width: isExpanded ? 240 : 72
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 35 }}
+      className="fixed left-0 top-0 bottom-0 bg-white border-r border-[#F1F5F9] hidden lg:flex flex-col z-[65] overflow-hidden"
+    >
         {/* Logo Section */}
         <div className="h-24 flex items-center px-4 relative z-10">
            <div className="flex items-center gap-3.5 min-w-[200px]">
@@ -155,7 +124,7 @@ export default function Sidebar() {
               >
                   <div className="w-1 h-1 rounded-full bg-[#94A3B8]" />
                   <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#94A3B8] leading-none">
-                    {isAdmin ? "Evaluator Node" : isParent ? "Parent Guard" : "Candidate Station"}
+                    {isAdmin ? "Evaluator Node" : "Candidate Station"}
                   </span>
               </motion.div>
             ) : (
@@ -244,6 +213,5 @@ export default function Sidebar() {
           </button>
         </div>
       </motion.aside>
-    </>
-  );
-}
+    );
+  }
