@@ -181,7 +181,11 @@ export default function AdminQuizzesPage() {
                       <Settings size={18} />
                     </button>
                     <button 
-                      onClick={() => router.push(`/quiz/host/${q.access_code}`)}
+                      onClick={async () => {
+                        // Reset to lobby before starting session
+                        await supabase.from("quizzes").update({ status: 'lobby', current_question_index: 0 }).eq("id", q.id);
+                        router.push(`/quiz/host/${q.access_code}`);
+                      }}
                       className="w-10 h-10 bg-[#0F172A] text-white rounded-xl flex items-center justify-center hover:bg-primary-blue transition-colors shadow-lg"
                     >
                       <Play size={18} fill="currentColor" />

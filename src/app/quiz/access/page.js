@@ -39,6 +39,9 @@ export default function ProtocolAccessPage() {
     if (fetchError || !quiz) {
       setError("Invalid Protocol Access Key");
       setLoading(false);
+    } else if (quiz.status !== 'lobby') {
+      setError("AUTHENTICATION DENIED: Protocol cluster is currently in active assessment. No new node signatures accepted.");
+      setLoading(false);
     } else {
       router.push(`/quiz/play/${quiz.access_code}`);
     }
