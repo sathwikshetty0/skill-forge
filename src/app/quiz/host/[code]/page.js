@@ -88,15 +88,16 @@ export default function AdminHostPage() {
           const count = Object.keys(state).length;
           setJoinCount(count);
 
-          // Extract names from presence state
-          const users = [];
+          // Extract names from presence state and deduplicate
+          const usersMap = {};
           Object.values(state).forEach(presences => {
             presences.forEach(p => {
-              if (p.full_name) {
-                users.push({ id: p.user_id, full_name: p.full_name });
+              if (p.user_id && p.full_name) {
+                usersMap[p.user_id] = p.full_name;
               }
             });
           });
+          const users = Object.entries(usersMap).map(([id, full_name]) => ({ id, full_name }));
           setPresentUsers(users);
           
           // Re-trigger leaderboard to merge these users
@@ -104,8 +105,20 @@ export default function AdminHostPage() {
         })
         .subscribe();
 
+      // HEARTBEAT SYNC: Every 10s broadcast state to ensure mobile nodes catch up
+      const heartbeat = setInterval(() => {
+        if (quizData) {
+          channel.send({
+            type: 'broadcast',
+            event: 'state_update',
+            payload: quizData
+          });
+        }
+      }, 10000);
+
       return () => {
         supabase.removeChannel(channel);
+        clearInterval(heartbeat);
         clearInterval(timerRef.current);
       };
     }
@@ -143,13 +156,14 @@ export default function AdminHostPage() {
     // Merge with present users who have no scores yet
     const allUsers = [...scoredUsers];
     presentUsers.forEach(pu => {
-      if (!allUsers.find(u => u.id === pu.id)) {
+      if (!allUsers.some(u => u.id === pu.id)) {
         allUsers.push({ id: pu.id, full_name: pu.full_name, total_score: 0 });
       }
     });
 
     const sorted = allUsers
-      .sort((a, b) => b.total_score - a.total_score)
+      .filter(u => u.full_name) // Ensure valid data
+      .sort((a, b) => (b.total_score || 0) - (a.total_score || 0))
       .slice(0, 15);
       
     setLeaderboard(sorted);

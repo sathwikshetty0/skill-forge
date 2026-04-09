@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   XCircle,
   Fingerprint,
+  Monitor,
   MonitorOff
 } from "lucide-react";
 
@@ -32,76 +33,93 @@ export default function CandidatePlayPage() {
 
   useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      // Allow mock session for demo
-      const mockSession = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("mock_session="))
-        ?.split("=")[1];
-      
-      const sessionUser = user || { id: "mock-user", email: "candidate@skillforge.io" };
-      setUser(sessionUser);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        // Allow mock session for demo
+        const mockSession = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("mock_session="))
+          ?.split("=")[1];
+        
+        const sessionUser = user || { 
+          id: `guest-${Math.random().toString(36).substr(2, 9)}`, 
+          email: "guest@skillforge.io" 
+        };
+        setUser(sessionUser);
 
-      // Fetch Quiz
-      const { data: quizData } = await supabase
-        .from("quizzes")
-        .select("*, questions(*)")
-        .eq("access_code", code.toUpperCase())
-        .single();
-      
-      if (!quizData) {
-        router.push("/quiz/access");
-        return;
+        // Fetch Quiz
+        const { data: quizData, error: qErr } = await supabase
+          .from("quizzes")
+          .select("*, questions(*)")
+          .eq("access_code", code?.toUpperCase())
+          .single();
+        
+        if (qErr || !quizData) {
+          console.error("Quiz retrieval failure:", qErr);
+          router.push("/quiz/access");
+          return;
+        }
+        
+        setQuiz(quizData);
+
+        // Fetch profile if exists
+        let sessionName = "Candidate";
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('id', user.id)
+            .single();
+          if (profile?.full_name) sessionName = profile.full_name;
+        } else {
+          sessionName = `Guest-${sessionUser.id.split('-')[1]}`;
+        }
+
+        // Subscribe to changes and presence with BROADCAST SYNC
+        const channel = supabase
+          .channel(`quiz_session_${code.toUpperCase()}`)
+          .on(
+            'postgres_changes', 
+            { event: '*', schema: 'public', table: 'quizzes', filter: `id=eq.${quizData.id}` },
+            (payload) => {
+              const updatedQuiz = payload.new;
+              setQuiz(prev => ({ ...prev, ...updatedQuiz }));
+              setSelectedOption(null);
+              setResultsActive(false);
+            }
+          )
+          .on(
+            'broadcast',
+            { event: 'state_update' },
+            (payload) => {
+              setQuiz(prev => ({ ...prev, ...payload.payload }));
+              setSelectedOption(null);
+              setResultsActive(false);
+            }
+          )
+          .subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+              console.log("SYNCHRONIZED WITH NODE CHANNEL");
+              await channel.track({
+                user_id: sessionUser.id,
+                full_name: sessionName,
+                online_at: new Date().toISOString(),
+              });
+            }
+          });
+
+        setLoading(false);
+
+        return () => {
+          supabase.removeChannel(channel);
+        };
+      } catch (err) {
+        console.error("CRITICAL SYNC ERROR:", err);
+        setLoading(false);
       }
-      
-      setQuiz(quizData);
-      setLoading(false);
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('full_name')
-        .eq('id', sessionUser.id)
-        .single();
-      
-      const sessionName = profile?.full_name || sessionUser.email?.split('@')[0] || "Challenger";
-
-      // Subscribe to changes and presence
-      const channel = supabase
-        .channel(`quiz_session_${code.toUpperCase()}`)
-        .on(
-          'postgres_changes', 
-          { event: '*', schema: 'public', table: 'quizzes', filter: `id=eq.${quizData.id}` },
-          (payload) => {
-            const updatedQuiz = payload.new;
-            setQuiz(prev => ({ ...prev, ...updatedQuiz }));
-            setSelectedOption(null); // Reset choice on new index
-            setResultsActive(false);
-          }
-        )
-        .on(
-          'broadcast',
-          { event: 'state_update' },
-          (payload) => {
-            setQuiz(prev => ({ ...prev, ...payload.payload }));
-            setSelectedOption(null);
-            setResultsActive(false);
-          }
-        )
-        .subscribe(async (status) => {
-          if (status === 'SUBSCRIBED') {
-            await channel.track({
-              user_id: sessionUser.id,
-              full_name: sessionName,
-              online_at: new Date().toISOString(),
-            });
-          }
-        });
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
     }
-    init();
+    if (code) init();
   }, [code]);
 
   useEffect(() => {
@@ -335,7 +353,7 @@ export default function CandidatePlayPage() {
                 </div>
               ) : (
                 <div className="col-span-full bg-white rounded-[40px] border border-[#E2E8F0] border-dashed flex flex-col items-center justify-center p-12 text-center">
-                   <Monitor className="text-[#94A3B8] w-16 h-16 mb-6 animate-pulse" />
+                   <MonitorOff className="text-[#94A3B8] w-16 h-16 mb-6 animate-pulse" />
                    <h2 className="text-2xl font-black text-[#0F172A] uppercase tracking-tighter">Waiting Terminal</h2>
                    <p className="text-[10px] font-black text-[#94A3B8] uppercase tracking-[0.3em] mt-2">Analysis broadcast on main display terminal</p>
                 </div>
