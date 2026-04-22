@@ -63,12 +63,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Institutional Domain Authority Check
-      if (!email.toLowerCase().endsWith("@vvce.ac.in")) {
-        setError("AUTHENTICATION FAILED: Only @vvce.ac.in credentials authorized.");
-        setLoading(false);
-        return;
-      }
+      // Domain restriction removed per user request
 
       const { data: authData, error } = await supabase.auth.signUp({
         email,
