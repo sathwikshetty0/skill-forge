@@ -146,8 +146,19 @@ export default function ResearchPage() {
   const progress = Math.min((researchContent.length / TARGET_CHARS) * 100, 100);
 
   return (
-    <div className="p-8 md:p-14 space-y-10">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-[#F1F5F9] pb-10">
+    <div className="p-8 md:p-14 space-y-10 relative overflow-hidden">
+      {/* HUD Background Elements */}
+      <div className="absolute top-0 right-0 p-20 opacity-[0.03] pointer-events-none rotate-12">
+        <ShieldCheck size={400} />
+      </div>
+      <div className="absolute bottom-0 left-0 p-20 opacity-[0.03] pointer-events-none -rotate-12">
+        <Zap size={400} />
+      </div>
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12vw] font-[900] text-slate-900/[0.02] pointer-events-none select-none tracking-tighter uppercase whitespace-nowrap z-0">
+        Confidential Data
+      </div>
+
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-[#F1F5F9] pb-10 relative z-10">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
              <div className="px-4 py-1.5 bg-blue-50 text-[#2563EB] rounded-full text-[10px] font-black uppercase tracking-[0.3em] border border-blue-100 shadow-sm">
