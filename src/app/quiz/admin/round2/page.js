@@ -164,30 +164,49 @@ export default function Round2SelectionPage() {
 
   return (
     <div className="p-8 md:p-14 space-y-12">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          { label: "Total Nodes", value: users.length, icon: Users, color: "blue" },
+          { label: "Assigned Topics", value: users.filter(u => u.round2_topic).length, icon: BookOpen, color: "emerald" },
+          { label: "Pending Assignment", value: users.filter(u => !u.round2_topic).length, icon: RefreshCw, color: "amber" },
+          { label: "Active Synthesis", value: users.filter(u => u.round2_status === 'submitted').length, icon: Zap, color: "indigo" },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white border border-[#E2E8F0] p-6 rounded-[24px] shadow-sm flex items-center gap-5">
+            <div className={`w-12 h-12 bg-${stat.color}-50 text-${stat.color}-600 rounded-2xl flex items-center justify-center`}>
+              <stat.icon size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-[#94A3B8] uppercase tracking-widest">{stat.label}</p>
+              <p className="text-2xl font-black text-[#0F172A]">{stat.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-4xl font-black text-[#0F172A] tracking-tighter uppercase leading-none">
-            Round 2 <span className="text-[#2563EB]">Selection</span>
-          </h1>
-          <p className="text-[11px] font-black text-[#94A3B8] uppercase tracking-[0.4em] mt-2">
-            Protocol Phase II: Secondary Research Assignment
+          <h2 className="text-2xl font-[900] text-[#0F172A] tracking-tighter uppercase leading-none">
+            Registry <span className="text-[#2563EB]">Flow</span>
+          </h2>
+          <p className="text-[10px] font-black text-[#94A3B8] uppercase tracking-[0.3em] mt-2">
+            DETAILED NODE MANAGEMENT
           </p>
         </div>
 
         <div className="flex items-center gap-4 w-full md:w-auto">
-          <div className="bg-white border border-[#E2E8F0] px-4 py-2 rounded-2xl flex items-center gap-3 flex-1 md:flex-none md:min-w-[300px] shadow-sm">
+          <div className="bg-white border border-[#E2E8F0] px-4 py-2 rounded-2xl flex items-center gap-3 flex-1 md:flex-none md:min-w-[300px] shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500/30 transition-all">
             <Search size={16} className="text-[#94A3B8]" />
             <input 
               type="text" 
-              placeholder="Filter nodes..." 
+              placeholder="FILTER NODES BY NAME OR EMAIL..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent border-none outline-none text-xs font-bold w-full placeholder:text-[#CBD5E1]"
+              className="bg-transparent border-none outline-none text-[10px] font-black w-full placeholder:text-[#CBD5E1] uppercase tracking-widest"
             />
           </div>
           <button 
             onClick={loadUsers}
-            className="p-3 bg-white border border-[#E2E8F0] rounded-2xl text-[#64748B] hover:text-[#2563EB] transition-all hover:shadow-md"
+            className="p-3 bg-white border border-[#E2E8F0] rounded-2xl text-[#64748B] hover:text-[#2563EB] transition-all hover:shadow-md active:scale-95"
           >
             <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
           </button>
