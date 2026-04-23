@@ -174,13 +174,22 @@ export default function ResearchPage() {
         </div>
 
         <div className="flex items-center gap-6">
-           <div className="bg-white border border-[#E2E8F0] px-8 py-4 rounded-[24px] shadow-sm flex flex-col items-center min-w-[140px]">
-              <span className="text-[9px] font-black text-[#94A3B8] uppercase tracking-widest mb-1">Characters</span>
-              <span className="text-2xl font-black text-[#0F172A] tabular-nums">{researchContent.length.toLocaleString()}</span>
+           <div className="bg-white border border-[#E2E8F0] px-8 py-5 rounded-[32px] shadow-sm flex flex-col items-center min-w-[160px] group hover:border-blue-200 transition-all">
+              <span className="text-[10px] font-black text-[#94A3B8] uppercase tracking-[0.3em] mb-1 group-hover:text-blue-500 transition-colors">Data Density</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-[900] text-[#0F172A] tabular-nums">{researchContent.length.toLocaleString()}</span>
+                <span className="text-[10px] font-black text-[#CBD5E1]">CHARS</span>
+              </div>
            </div>
-           <div className="bg-[#0F172A] text-white px-8 py-4 rounded-[24px] shadow-2xl flex flex-col items-center min-w-[140px]">
-              <span className="text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">Requirement</span>
-              <span className="text-2xl font-black tabular-nums">{TARGET_CHARS.toLocaleString()}</span>
+           <div className="bg-[#0F172A] text-white px-8 py-5 rounded-[32px] shadow-2xl flex flex-col items-center min-w-[160px] relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-2 opacity-10">
+                <Zap size={40} />
+              </div>
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-1 relative z-10">Quota Target</span>
+              <div className="flex items-baseline gap-1 relative z-10">
+                <span className="text-3xl font-[900] tabular-nums text-blue-400">10K</span>
+                <span className="text-[10px] font-black text-white/30">THRESHOLD</span>
+              </div>
            </div>
         </div>
       </header>
