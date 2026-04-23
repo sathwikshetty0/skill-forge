@@ -145,7 +145,7 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-2 space-y-1 relative z-10 overflow-y-auto custom-scrollbar overflow-x-hidden">
+        <nav className="flex-1 px-3 space-y-2 relative z-10 overflow-y-auto custom-scrollbar overflow-x-hidden pt-4">
           {navItems.map((item) => {
             const isActive = pathname ? (pathname === item.href || (item.label !== "Dashboard" && item.label !== "Control Center" && pathname.startsWith(item.href))) : false;
             return (
@@ -153,15 +153,23 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center transition-all rounded-full mx-1.5 group relative overflow-hidden h-[46px] ${
+                className={`flex items-center transition-all rounded-2xl mx-1 group relative overflow-hidden h-[52px] ${
                   isActive 
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-100" 
-                    : "text-[#94A3B8] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
+                    ? "bg-[#0F172A] text-white shadow-xl shadow-slate-200" 
+                    : "text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
                 }`}
-                style={{ width: isExpanded ? '228px' : '60px' }}
+                style={{ width: isExpanded ? '216px' : '48px' }}
               >
-                <div className={`flex items-center gap-5 px-0 w-full ${isExpanded ? "pl-5" : "justify-center"}`}>
-                  <item.icon size={18} className={`${isActive ? "text-white" : "text-[#94A3B8] group-hover:text-blue-600"} transition-all duration-300 flex-shrink-0`} />
+                <div className={`flex items-center gap-4 px-0 w-full ${isExpanded ? "pl-4" : "justify-center"}`}>
+                  <div className={`relative flex items-center justify-center ${isActive ? "text-blue-400" : "text-[#94A3B8] group-hover:text-blue-600"}`}>
+                    <item.icon size={20} className="transition-all duration-300 flex-shrink-0" />
+                    {isActive && (
+                      <motion.div 
+                        layoutId="icon-glow"
+                        className="absolute inset-0 bg-blue-400/20 blur-lg rounded-full"
+                      />
+                    )}
+                  </div>
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.span 
@@ -169,7 +177,7 @@ export default function Sidebar() {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="text-[10px] font-extrabold uppercase tracking-[0.2em] whitespace-nowrap"
+                        className="text-[11px] font-black uppercase tracking-[0.25em] whitespace-nowrap"
                       >
                         {item.label}
                       </motion.span>
@@ -179,10 +187,16 @@ export default function Sidebar() {
                   {isActive && isExpanded && (
                     <motion.div 
                       layoutId="active-indicator" 
-                      className="ml-auto mr-5 w-1.2 h-1.2 bg-white rounded-full flex-shrink-0" 
+                      className="ml-auto mr-4 w-1.5 h-1.5 bg-blue-400 rounded-full flex-shrink-0 shadow-[0_0_10px_rgba(96,165,250,0.8)]" 
                     />
                   )}
                 </div>
+                {isActive && (
+                  <motion.div 
+                    layoutId="sidebar-active-bg"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent pointer-events-none"
+                  />
+                )}
               </Link>
             );
           })}
