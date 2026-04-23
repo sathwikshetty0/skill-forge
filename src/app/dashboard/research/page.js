@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function ResearchPage() {
   const router = useRouter();
@@ -70,6 +71,7 @@ export default function ResearchPage() {
     const pastedText = e.clipboardData.getData("text");
     if (pastedText.length > PASTE_LIMIT) {
       e.preventDefault();
+      toast.error(`PASTE RESTRICTION: Max ${PASTE_LIMIT} characters allowed.`);
       setError(`PASTE RESTRICTION: You cannot paste more than ${PASTE_LIMIT} characters at once. Please type or paste in smaller segments.`);
       setTimeout(() => setError(null), 5000);
       
@@ -106,8 +108,10 @@ export default function ResearchPage() {
       .eq("id", profile.id);
 
     if (updateError) {
+      toast.error("COMMIT FAILURE: Data synchronization failed.");
       setError("Submission failed. Please try again.");
     } else {
+      toast.success("RESEARCH COMMITTED SUCCESSFULLY");
       setSuccess(true);
       setProfile({ ...profile, round2_status: 'submitted' });
     }

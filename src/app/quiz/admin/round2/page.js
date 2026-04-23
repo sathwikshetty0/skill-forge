@@ -16,6 +16,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 const RESEARCH_TOPICS = [
   "Artificial Intelligence in Healthcare",
@@ -150,8 +151,9 @@ export default function Round2SelectionPage() {
 
     if (error) {
       console.error("Error assigning topic:", error);
-      alert("Failed to assign topic. Please ensure the database schema supports round 2 fields.");
+      toast.error("PROTOCOL FAILURE: Database synchronization failed.");
     } else {
+      toast.success(`TOPIC ASSIGNED: ${randomTopic} linked to node.`);
       setUsers(users.map(u => u.id === userId ? { ...u, round2_topic: randomTopic, round2_status: 'assigned' } : u));
     }
     setUpdating(null);
