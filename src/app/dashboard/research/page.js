@@ -207,13 +207,27 @@ export default function ResearchPage() {
               className="w-full bg-white border-2 border-[#F1F5F9] rounded-[32px] p-10 min-h-[600px] text-lg font-medium leading-relaxed focus:outline-none focus:border-[#2563EB]/30 focus:ring-4 focus:ring-blue-50 transition-all placeholder:text-[#CBD5E1] shadow-sm selection:bg-blue-100 resize-none"
             />
             
-            {/* Progress Overlay */}
-            <div className="absolute bottom-6 left-6 right-6 h-2 bg-slate-100 rounded-full overflow-hidden border border-white">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                className={`h-full rounded-full ${progress === 100 ? "bg-emerald-500" : "bg-[#2563EB]"}`}
-              />
+            {/* Progress Overlay with Terminal Feedback */}
+            <div className="absolute bottom-8 left-8 right-8 flex flex-col gap-3">
+              <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.2em]">
+                <div className="flex items-center gap-2">
+                  <span className={researchContent.length > 0 ? "text-blue-500 animate-pulse" : "text-slate-400"}>
+                    {researchContent.length > 0 ? "• SYNC_ACTIVE" : "• STANDBY"}
+                  </span>
+                  <span className="text-slate-300">|</span>
+                  <span className="text-slate-400">BUFFER_LOAD: {progress.toFixed(1)}%</span>
+                </div>
+                <div className="text-slate-400">
+                  ENC_V3.2 // AES-256
+                </div>
+              </div>
+              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden border border-white shadow-inner">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  className={`h-full rounded-full ${progress === 100 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : "bg-[#2563EB] shadow-[0_0_10px_rgba(37,99,235,0.3)]"}`}
+                />
+              </div>
             </div>
           </div>
 
