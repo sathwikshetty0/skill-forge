@@ -160,12 +160,17 @@ export default function ResearchPage() {
                 </div>
              )}
           </div>
-          <h1 className="text-5xl font-black text-[#0F172A] tracking-tighter uppercase leading-none max-w-2xl">
-            {profile.round2_topic}
-          </h1>
-          <p className="text-[11px] font-black text-[#94A3B8] uppercase tracking-[0.4em] mt-2">
-            SECONDARY RESEARCH & SYNTHESIS MODULE
-          </p>
+          <div className="group relative">
+            <h1 className="text-6xl font-[900] text-[#0F172A] tracking-tighter uppercase leading-[0.85] max-w-3xl mb-6">
+              {profile.round2_topic}
+            </h1>
+            <div className="flex items-center gap-4">
+              <div className="h-[2px] w-12 bg-blue-600" />
+              <p className="text-[12px] font-black text-[#94A3B8] uppercase tracking-[0.5em]">
+                SUBJECT NODE ID: R2-{profile.id.substring(0, 8).toUpperCase()}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-6">
