@@ -302,7 +302,7 @@ export default function ResearchPage() {
                 className={`w-full py-5 rounded-2xl font-black text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-3 shadow-lg active:scale-95 ${
                   profile.round2_status === 'submitted' || success
                   ? "bg-emerald-500 text-white cursor-not-allowed"
-                  : "bg-[#2563EB] text-white hover:bg-blue-600 shadow-blue-200"
+                  : "bg-[#2563EB] text-white hover:bg-blue-600 shadow-blue-200 hover:shadow-blue-300/50 hover:scale-[1.02]"
                 }`}
               >
                 {submitting ? (
