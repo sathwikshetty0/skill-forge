@@ -328,8 +328,23 @@ export default function ResearchPage() {
                 <span className="text-[10px] font-black text-[#0F172A] uppercase">Accuracy</span>
                 <span className="text-[10px] font-bold text-[#2563EB]">98.2%</span>
              </div>
-             <div className="h-1.5 bg-[#F8FAFC] rounded-full overflow-hidden">
+             <div className="h-1.5 bg-[#F8FAFC] rounded-full overflow-hidden mb-6">
                 <div className="h-full bg-[#2563EB] w-[98.2%]" />
+             </div>
+
+             <div className="space-y-3 pt-6 border-t border-slate-100">
+                <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-400">
+                   <span>Encryption Status</span>
+                   <span className="text-emerald-500">Active</span>
+                </div>
+                <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-400">
+                   <span>Network Latency</span>
+                   <span>14ms</span>
+                </div>
+                <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-400">
+                   <span>Node Stability</span>
+                   <span className="text-blue-500">Nominal</span>
+                </div>
              </div>
           </div>
         </aside>
