@@ -166,6 +166,25 @@ export default function Round2SelectionPage() {
 
   return (
     <div className="p-8 md:p-14 space-y-12">
+      <section className="bg-[#0F172A] rounded-[32px] p-10 text-white relative overflow-hidden shadow-2xl shadow-blue-900/20">
+        <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12">
+          <Trophy size={120} />
+        </div>
+        <div className="relative z-10 space-y-6 max-w-3xl">
+          <div className="flex items-center gap-3">
+             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-400">Mission Briefing</span>
+          </div>
+          <h1 className="text-4xl font-[900] tracking-tighter uppercase leading-none">
+            Round 2 <span className="text-blue-500">Authorization</span>
+          </h1>
+          <p className="text-slate-400 text-sm font-medium leading-relaxed uppercase tracking-wider">
+            Select qualified nodes for Phase II engagement. Each node must be assigned a unique research subject. 
+            Candidates are required to synthesize 10,000 characters of secondary research within a high-security environment.
+          </p>
+        </div>
+      </section>
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
           { label: "Total Nodes", value: users.length, icon: Users, color: "blue" },
